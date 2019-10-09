@@ -7,6 +7,11 @@ import {
 
 // import { createLogger } from 'redux-logger';
 import layoutReducers from './layout/reducers.js';
+import rtConfigsReducers from './rt_configs/reducers.js';
+import rtDataReducers from './rt_data/reducers.js';
+import toolsStateReducers from './tools_state/reducers.js';
+import activeMouseToolReducers from './active_mouse_tool/reducers.js';
+
 import { reducer as oidcReducer } from 'redux-oidc';
 import { redux } from '@ohif/core';
 import thunkMiddleware from 'redux-thunk';
@@ -18,6 +23,10 @@ const middleware = [thunkMiddleware];
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 reducers.ui = layoutReducers;
+reducers.rt_configs = rtConfigsReducers;
+reducers.rt_data = rtDataReducers;
+reducers.tools_state = toolsStateReducers;
+reducers.active_mouse_tool = activeMouseToolReducers;
 reducers.oidc = oidcReducer;
 
 const rootReducer = combineReducers(reducers);

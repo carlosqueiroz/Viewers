@@ -15,6 +15,7 @@ class ExpandableToolMenu extends React.Component {
       PropTypes.shape({
         id: PropTypes.string,
         label: PropTypes.string.isRequired,
+        showShowLabel: PropTypes.bool,
         icon: PropTypes.oneOfType([
           PropTypes.string,
           PropTypes.shape({
@@ -22,7 +23,14 @@ class ExpandableToolMenu extends React.Component {
           }),
         ]),
       })
-    ).isRequired,
+    ),
+    components: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string,
+        Component: PropTypes.oneOfType([PropTypes.func, PropTypes.object])
+          .isRequired,
+      })
+    ),
     icon: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.shape({
@@ -35,6 +43,7 @@ class ExpandableToolMenu extends React.Component {
 
   static defaultProps = {
     buttons: [],
+    components: [],
     icon: 'ellipse-circle',
     label: 'More',
   };
@@ -53,14 +62,21 @@ class ExpandableToolMenu extends React.Component {
       id={`${Math.random()}_tooltip-toolbar-overlay}`}
     >
       {this.getButtons()}
+      {this.getComponents()}
     </Tooltip>
   );
+
+  getComponents = () => {
+    return this.props.components.map(({ Component, ...comp }, index) => {
+      return <Component key={`c_${index}`} {...comp} />;
+    });
+  };
 
   getButtons = () => {
     return this.props.buttons.map((button, index) => {
       return (
         <ToolbarButton
-          key={index}
+          key={`b_${index}`}
           {...button}
           isActive={button.id === this.props.activeCommand}
         />

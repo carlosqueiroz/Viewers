@@ -38,5 +38,22 @@
   "Stack Scroll": "Navegar Stacks",
   "Stop": "Parar",
   "Themes": "Temas",
-  "Zoom": "Zoom"
+  "Zoom": "Zoom",
+  "Windowing": "Janelamento",
+  "Navigation": "Navegação",
+  "Measurement": "Medição",
+  "Default": "Predefinido",
+  "Sort": "Ordenar",
+  "Generate Series": "Gerar Séries",
+  "Fusion": "Fusão",
+  "Filters": "Filtros",
+  "Annotations": "Anotações",
+  "Erase": "Apagar",
+  "Write": "Escrever",
+  "Record": "Gravar",
+  "Sendo to PACS": "Enviar PACS",
+  "Print": "Imprimir",
+  "Export": "Exportar",
+  "Burn CD": "Gravar CD",
+  "Open Studies": "Abrir estudos"
 }

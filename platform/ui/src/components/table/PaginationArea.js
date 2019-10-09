@@ -41,7 +41,7 @@ class PaginationArea extends PureComponent {
               <li className="page-item prev">
                 <button
                   onClick={this.prevPage}
-                  disabled={this.props.currentPage === 0}
+                  disabled={this.props.currentPage === 1}
                   className="btn page-link"
                 >
                   {this.props.t('Previous')}
@@ -107,5 +107,4 @@ class PaginationArea extends PureComponent {
   }
 }
 
-const connectedComponent = withTranslation('Common')(PaginationArea);
-export { connectedComponent as PaginationArea };
+export default withTranslation('Common')(PaginationArea);

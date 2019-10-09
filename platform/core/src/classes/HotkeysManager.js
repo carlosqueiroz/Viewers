@@ -67,13 +67,18 @@ export class HotkeysManager {
    * @param {String} extension
    * @returns {undefined}
    */
-  registerHotkeys({ commandName, keys, label } = {}, extension) {
+  registerHotkeys(
+    { commandName, keys, label, commandOptions } = {},
+    extension
+  ) {
     if (!commandName) {
       log.warn(`No command was defined for hotkey "${keys}"`);
       return;
     }
 
-    const previouslyRegisteredDefinition = this.hotkeyDefinitions[commandName];
+    const previouslyRegisteredDefinition = this.hotkeyDefinitions[
+      commandName + label
+    ];
 
     if (previouslyRegisteredDefinition) {
       const previouslyRegisteredKeys = previouslyRegisteredDefinition.keys;
@@ -81,8 +86,13 @@ export class HotkeysManager {
     }
 
     // Set definition & bind
-    this.hotkeyDefinitions[commandName] = { keys, label };
-    this._bindHotkeys(commandName, keys);
+    this.hotkeyDefinitions[commandName + label] = {
+      keys,
+      label,
+      commandOptions,
+    };
+
+    this._bindHotkeys(commandName, keys, commandOptions);
   }
 
   /**
@@ -111,7 +121,7 @@ export class HotkeysManager {
    * @param {string[]} keys - One or more key combinations that should trigger command
    * @returns {undefined}
    */
-  _bindHotkeys(commandName, keys) {
+  _bindHotkeys(commandName, keys, commandOptions) {
     const isKeyDefined = keys === '' || keys === undefined;
     if (isKeyDefined) {
       return;
@@ -119,12 +129,13 @@ export class HotkeysManager {
 
     const isKeyArray = keys instanceof Array;
     if (isKeyArray) {
-      keys.forEach(key => this._bindHotkeys(commandName, key));
+      keys.forEach(key => this._bindHotkeys(commandName, key, commandOptions));
       return;
     }
 
     hotkeys.bind(keys, evt => {
-      this._commandsManager.runCommand(commandName, { evt });
+      const options = Object.assign({ evt }, commandOptions);
+      this._commandsManager.runCommand(commandName, options);
     });
   }
 

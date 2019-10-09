@@ -8,5 +8,7 @@
 
 .LayoutPanelDropTarget.hovered {
   opacity: 0.5;
-  cursor: copy;
+}
+.LayoutPanelDropTarget.hovered * {
+  cursor: copy !important;
 }

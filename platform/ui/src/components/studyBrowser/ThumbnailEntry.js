@@ -9,6 +9,7 @@ class ThumbnailEntry extends Component {
     active: false,
     error: false,
     stackPercentComplete: 0,
+    showDetails: true,
   };
 
   static propTypes = {
@@ -30,6 +31,7 @@ class ThumbnailEntry extends Component {
     numImageFrames: PropTypes.number,
     onDoubleClick: PropTypes.func,
     onClick: PropTypes.func,
+    showDetails: PropTypes.bool,
   };
 
   render() {
@@ -68,31 +70,33 @@ class ThumbnailEntry extends Component {
         onMouseDown={this.onMouseDown}
       >
         {contents}
-        <div
-          className={infoOnly ? 'series-details info-only' : 'series-details'}
-        >
-          <div className="series-description">
-            {this.props.seriesDescription}
-          </div>
-          <div className="series-information">
-            <div className="item item-series clearfix">
-              <div className="icon">S:</div>
-              <div className="value">{this.props.seriesNumber}</div>
+        {this.props.showDetails ? (
+          <div
+            className={infoOnly ? 'series-details info-only' : 'series-details'}
+          >
+            <div className="series-description">
+              {this.props.seriesDescription}
             </div>
-            {hasInstanceNumber && (
+            <div className="series-information">
               <div className="item item-series clearfix">
-                <div className="icon">I:</div>
-                <div className="value">{this.props.instanceNumber}</div>
+                <div className="icon">S:</div>
+                <div className="value">{this.props.seriesNumber}</div>
               </div>
-            )}
-            <div className="item item-frames clearfix">
-              <div className="icon">
-                <div />
+              {hasInstanceNumber && (
+                <div className="item item-series clearfix">
+                  <div className="icon">I:</div>
+                  <div className="value">{this.props.instanceNumber}</div>
+                </div>
+              )}
+              <div className="item item-frames clearfix">
+                <div className="icon">
+                  <div />
+                </div>
+                <div className="value">{this.props.numImageFrames}</div>
               </div>
-              <div className="value">{this.props.numImageFrames}</div>
             </div>
           </div>
-        </div>
+        ) : null}
       </div>
     );
   }

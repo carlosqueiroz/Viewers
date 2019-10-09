@@ -7,10 +7,20 @@ import classnames from 'classnames';
 import { withTranslation } from '../utils/LanguageProvider';
 
 export function ToolbarButton(props) {
-  const { isActive, icon, labelWhenActive, onClick, t } = props;
+  const {
+    isActive,
+    icon,
+    labelWhenActive,
+    shouldShowLabel,
+    onClick,
+    t,
+  } = props;
   const className = classnames(props.className, { active: isActive });
-  const iconProps = typeof icon === 'string' ? { name: icon } : icon;
-  const label = isActive && labelWhenActive ? labelWhenActive : props.label;
+  let label = isActive && labelWhenActive ? labelWhenActive : props.label;
+  label = t(label);
+  const iconProps =
+    typeof icon === 'string' ? { name: icon } : icon;
+  iconProps.showTitle = false;
 
   const arrowIconName = props.isExpanded ? 'caret-up' : 'caret-down';
   const arrowIcon = props.isExpandable && (
@@ -23,13 +33,29 @@ export function ToolbarButton(props) {
     }
   };
 
+  const handleKeyDown = event => {
+    const key = event.which || event.keyCode;
+    if((key === 13 || key === 32) && onClick) // enter | space
+      onClick(event, props);
+  };
+
+  // TODO: Dar jeito no title, adicionar tooltip?
   return (
-    <div className={className} onClick={handleClick}>
+    <div
+      className={className}
+      title={t(label)}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex="0"
+    >
       {iconProps && <Icon {...iconProps} />}
-      <div className="toolbar-button-label">
-        {t(label)}
-        {arrowIcon}
-      </div>
+      {shouldShowLabel ? (
+        <div className="toolbar-button-label">
+          {t(label)}
+          {arrowIcon}
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -39,6 +65,8 @@ ToolbarButton.propTypes = {
   isActive: PropTypes.bool,
   /** Display label for button */
   label: PropTypes.string.isRequired,
+  /** Determines if we show the label */
+  shouldShowLabel: PropTypes.bool,
   /** Alternative text to show when button is active */
   labelWhenActive: PropTypes.string,
   className: PropTypes.string.isRequired,
@@ -59,6 +87,7 @@ ToolbarButton.propTypes = {
 ToolbarButton.defaultProps = {
   isActive: false,
   className: 'toolbar-button',
+  shouldShowLabel: true,
 };
 
 export default withTranslation('Buttons')(ToolbarButton);

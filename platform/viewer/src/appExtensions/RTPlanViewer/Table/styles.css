@@ -1,0 +1,104 @@
+:root {
+  --ft-color-1: rgba(255, 252, 143, 0.92);
+  --ft-color-2: rgb(251, 199, 242);
+  --ft-color-3: rgb(169, 208, 245);
+  --ft-color-4: rgb(249, 196, 172);
+  --ft-color-5: rgb(203, 245, 176);
+
+  --ft-color-header: rgba(250, 228, 228, 0.16);
+  --ft-color-text-header: rgb(8, 8, 8);
+  --ft-color-text: rgb(0, 0, 0);
+  --ft-border-table-mu: 1px;
+}
+
+table.ficha {
+  color: black;
+  color: var(--ft-color-text);
+
+  border-collapse: collapse;
+  display: table;
+  font-family: sans-serif;
+  font-size: 9.5px;
+}
+
+table.ficha th,
+table.ficha td {
+  width: 100px !important;
+  max-width: 2000px !important;
+  border: 1px solid rgb(75, 75, 75);
+  padding: 0.1em 0.5em !important;
+  white-space: nowrap;
+  display: table-cell;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+table.ficha,
+table.ficha th,
+table.ficha td {
+  border: 1px solid rgb(75, 75, 75);
+  border: var(--ft-border-table-mu) solid rgb(75, 75, 75);
+}
+
+.border-th {
+  background-color: white;
+  /*background-color: var(--ft-color-header);*/
+  color: black;
+  color: var(--ft-color-text-header);
+}
+
+.limit-green {
+  background-color: #8bc34a !important;
+  text-align: center;
+  border-radius: 0px !important;
+}
+
+.limit-red {
+  background-color: #ef5350 !important;
+  text-align: center;
+  border-radius: 0px !important;
+}
+
+.color-1 {
+  /*background-color: rgba(255, 252, 143, 0.92);*/
+  background-color: rgba(255, 252, 143, 0.92);
+  background-color: var(--ft-color-1);
+  text-align: center;
+  border-radius: 0px;
+}
+
+.color-2 {
+  background-color: rgb(251, 199, 242);
+  background-color: var(--ft-color-2);
+  text-align: center;
+  border-radius: 0px;
+}
+
+.color-3 {
+  background-color: rgb(169, 208, 245);
+  background-color: var(--ft-color-3);
+  text-align: center;
+  border-radius: 0px;
+}
+
+.color-4 {
+  background-color: rgb(249, 196, 172);
+  background-color: var(--ft-color-4);
+  text-align: center;
+  border-radius: 0px;
+}
+
+.color-5 {
+  background-color: rgb(203, 245, 176);
+  background-color: var(--ft-color-5);
+  text-align: center;
+  border-radius: 0px;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.flex-space-evenly {
+  justify-content: space-evenly;
+}

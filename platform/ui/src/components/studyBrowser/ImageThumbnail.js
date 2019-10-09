@@ -52,6 +52,7 @@ export default class ImageThumbnail extends PureComponent {
     super(props);
 
     this.canvas = React.createRef();
+    this.mounted = false;
 
     const renderIntoCanvas = this.props.imageId && !this.props.imageSrc;
 
@@ -61,6 +62,7 @@ export default class ImageThumbnail extends PureComponent {
   }
 
   componentDidMount() {
+    this.mounted = true;
     const renderIntoCanvas = this.props.imageId && !this.props.imageSrc;
 
     if (renderIntoCanvas) {
@@ -69,17 +71,20 @@ export default class ImageThumbnail extends PureComponent {
 
       cornerstone.loadAndCacheImage(imageId).then(
         image => {
-          renderAsync(canvas, image).then(
-            () => {
-              this.setState({
-                loading: false,
-              });
-            },
-            error => {
-              // TODO: Set state?
-              throw new Error(error);
-            }
-          );
+          if (this.mounted) {
+            renderAsync(canvas, image).then(
+              () => {
+                if (this.mounted)
+                  this.setState({
+                    loading: false,
+                  });
+              },
+              error => {
+                // TODO: Set state?
+                throw new Error(error);
+              }
+            );
+          }
         },
         error => {
           // TODO: Set state?
@@ -87,6 +92,10 @@ export default class ImageThumbnail extends PureComponent {
         }
       );
     }
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   render() {

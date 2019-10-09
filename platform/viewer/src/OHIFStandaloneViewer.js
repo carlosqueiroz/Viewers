@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
+import './OHIFStandaloneViewer.css';
+import './variables.css';
+import './theme-tide.css';
+import './theme-rt.css';
+
 import { withRouter, matchPath } from 'react-router';
 import { Route, Switch } from 'react-router-dom';
 import { NProgress } from '@tanem/react-nprogress';
@@ -16,9 +22,6 @@ import StandaloneRouting from './routes/StandaloneRouting.js';
 import CallbackPage from './routes/CallbackPage.js';
 import NotFound from './routes/NotFound.js';
 import { Bar, Container } from './components/LoadingBar/';
-import './OHIFStandaloneViewer.css';
-import './variables.css';
-import './theme-tide.css';
 
 // Dynamic Import Routes (CodeSplitting)
 // const IHEInvokeImageDisplay = asyncComponent(() =>

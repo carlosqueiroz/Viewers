@@ -133,7 +133,8 @@ function getSourceImageInstanceUid(instance) {
   if (
     SourceImageSequence &&
     SourceImageSequence.Value &&
-    SourceImageSequence.Value.length
+    SourceImageSequence.Value.length &&
+    SourceImageSequence.Value[0]['00081155'].Value
   ) {
     return SourceImageSequence.Value[0]['00081155'].Value[0];
   }
@@ -309,6 +310,7 @@ async function resultDataToStudyMetadata(server, studyInstanceUid, resultData) {
     imageCount: DICOMWeb.getString(anInstance['00201208']),
     studyInstanceUid: DICOMWeb.getString(anInstance['0020000D']),
     institutionName: DICOMWeb.getString(anInstance['00080080']),
+    ManufacturerModelName: DICOMWeb.getString(anInstance['00081090']),
   };
 
   const seriesMap = {};

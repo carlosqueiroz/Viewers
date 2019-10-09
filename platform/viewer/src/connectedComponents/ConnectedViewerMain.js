@@ -2,6 +2,9 @@ import OHIF from "@ohif/core";
 import ViewerMain from "./ViewerMain";
 import { connect } from "react-redux";
 
+import rtDataActions from '../store/rt_data/actions';
+import toolsStateActions from '../store/tools_state/actions';
+
 const {
   setViewportSpecificData,
   clearViewportSpecificData
@@ -25,7 +28,13 @@ const mapDispatchToProps = dispatch => {
     },
     clearViewportSpecificData: () => {
       dispatch(clearViewportSpecificData());
-    }
+    },
+    rtDataClearAllData: () => {
+      dispatch(rtDataActions.clearAllData());
+    },
+    toolsStateClearAllData: () => {
+      dispatch(toolsStateActions.clearAllData());
+    },
   };
 };
 

@@ -12,7 +12,8 @@ function defaultViewportPlugin(props) {
 function EmptyViewport() {
   return (
     <div className="EmptyViewport">
-      <p>Please drag a stack here to view images.</p>
+      {/* <p>Please drag a stack here to view images.</p> */}
+      <p>Por favor arraste uma série aqui.</p>
     </div>
   );
 }
@@ -104,9 +105,10 @@ export class LayoutManager extends Component {
   }
 
   render() {
-    if (!this.props.viewportData.length) {
-      return '';
-    }
+    // PS: Deixar viewport em branco quando ela é criada
+    // if (!this.props.viewportData.length) {
+    //   return '';
+    // }
 
     const { supportsDragAndDrop, studies, viewportData } = this.props;
     const viewports = this.props.layout.viewports;

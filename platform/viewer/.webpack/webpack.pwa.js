@@ -33,6 +33,7 @@ module.exports = (env, argv) => {
     output: {
       path: DIST_DIR,
       filename: isProdBuild ? '[name].bundle.[chunkhash].js' : '[name].js',
+      chunkFilename: isProdBuild ? '[name].bundle.[chunkhash].js' : '[name].js',
       publicPath: PUBLIC_URL, // Used by HtmlWebPackPlugin for asset prefix
     },
     stats: {
@@ -62,6 +63,20 @@ module.exports = (env, argv) => {
       //   //   }),
       //   //   new OptimizeCSSAssetsPlugin({}),
       //   // ],
+
+      // https://github.com/webpack/webpack/issues/7217#issuecomment-391042973
+      splitChunks: {
+        cacheGroups: {
+          commons: {
+            test({resource}, chunks) {
+              return /[\\/]node_modules[\\/]/.test(resource) &&
+                !/\.css$/.test(resource);
+            },
+            name: 'vendors',
+            chunks: 'all'
+          }
+        }
+      }
     },
     module: {
       rules: [...extractStyleChunksRule(isProdBuild)],
@@ -112,12 +127,14 @@ module.exports = (env, argv) => {
     devServer: {
       // gzip compression of everything served
       // Causes Cypress: `wait-on` issue in CI
-      // compress: true,
+      compress: true,
       // http2: true,
       // https: true,
       hot: true,
       open: true,
-      port: 3000,
+      // https://github.com/webpack/webpack-dev-server/issues/547
+      host: '0.0.0.0',
+      port: 5000,
       historyApiFallback: {
         disableDotRule: true,
       },

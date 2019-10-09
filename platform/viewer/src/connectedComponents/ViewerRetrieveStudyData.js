@@ -58,6 +58,7 @@ class ViewerRetrieveStudyData extends Component {
 
         return study;
       });
+      console.log('studies', updatedStudies);
 
       this.setState({
         studies: updatedStudies

@@ -1,5 +1,8 @@
 import OHIF from '@ohif/core';
+import cornerstoneTools from 'cornerstone-tools';
 import updateTableWithNewMeasurementData from './lib/updateTableWithNewMeasurementData';
+
+window.OHIF = OHIF;
 
 function getToolLabellingFlowCallback(store) {
   const setLabellingFlowDataAction = labellingFlowData => ({
@@ -139,11 +142,41 @@ function getResetLabellingAndContextMenu(store) {
   };
 }
 
+// https://github.com/cornerstonejs/cornerstoneTools/blob/e38e2f5c81b0f83cca5a29a03334bee287028a8a/src/store/addTool.js#L19
+const _addToolForElement = (element, ApiTool, props) => {
+  const tool = new ApiTool(props);
+  const toolAlreadyAddedToElement = cornerstoneTools.getToolForElement(
+    element,
+    tool.name
+  );
+
+  // Tive que copiar essa função direto do cornerstoneTools só para tirar
+  // esse warning sem sentido.
+  if (toolAlreadyAddedToElement) {
+    // logger.warn('%s has already been added to the target element', tool.name);
+    return;
+  }
+
+  tool.element = element;
+  cornerstoneTools.store.state.tools.push(tool);
+};
+
 export default function setupTools(store) {
   const toolLabellingFlowCallback = getToolLabellingFlowCallback(store);
   const availableTools = [
     { name: 'Pan', mouseButtonMasks: [1, 4] },
-    { name: 'Zoom', mouseButtonMasks: [1, 2] },
+    {
+      name: 'Zoom',
+      mouseButtonMasks: [1, 2],
+      props: {
+        configuration: {
+          invert: false,
+          preventZoomOutsideImage: false,
+          minScale: 0.01,
+          maxScale: 20.0,
+        },
+      },
+    },
     { name: 'Wwwc', mouseButtonMasks: [1] },
     { name: 'Magnify' },
     { name: 'WwwcRegion' },
@@ -227,6 +260,17 @@ export default function setupTools(store) {
       },
     },
   ];
+
+  // PS: Gambiarras para se livrar dos warnings...
+  // Não consegui de jeito nenhum achar a causa deles, provavelmente
+  // tem a ver com a interação do cornerstone + react-cornerstone-viewport
+  cornerstoneTools.addToolForElement = _addToolForElement;
+  availableTools.forEach(({ name, props }) => {
+    const toolName = cornerstoneTools[name] ? name : `${name}Tool`;
+    const Tool = cornerstoneTools[toolName];
+    if (Tool && !cornerstoneTools.store.state.globalTools[toolName])
+      cornerstoneTools.addTool(Tool, props ? props : {});
+  });
 
   const onRightClick = getOnRightClickCallback(store);
   const onTouchPress = getOnTouchPressCallback(store);

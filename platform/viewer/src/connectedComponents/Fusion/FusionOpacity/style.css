@@ -1,0 +1,18 @@
+.FusionOpacity {
+  padding: 5px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.FusionOpacity__info {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.FusionOpacity__input {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+}

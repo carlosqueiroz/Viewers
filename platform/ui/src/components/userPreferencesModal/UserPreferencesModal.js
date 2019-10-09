@@ -2,16 +2,18 @@ import './UserPreferencesModal.styl';
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Modal from 'react-bootstrap-modal';
 import { withTranslation } from '../../utils/LanguageProvider';
-
-import 'react-bootstrap-modal/lib/css/rbm-patch.css';
 import cloneDeep from 'lodash.clonedeep';
 import isEqual from 'lodash.isequal';
 import { UserPreferences } from './UserPreferences';
 
-// TODO: Is this the only component importing these?
-import './../../design/styles/common/modal.styl';
+import { Modal } from '../modal';
+// import Modal from 'react-responsive-modal';
+
+// import Modal from 'react-bootstrap-modal';
+// import 'react-bootstrap-modal/lib/css/rbm-patch.css';
+// // TODO: Is this the only component importing these?
+// import './../../design/styles/common/modal.styl';
 
 class UserPreferencesModal extends Component {
   // TODO: Make this component more generic to allow things other than W/L and hotkeys...
@@ -36,6 +38,7 @@ class UserPreferencesModal extends Component {
 
   static defaultProps = {
     isOpen: false,
+    onCancel: () => {},
   };
 
   save = () => {
@@ -63,16 +66,51 @@ class UserPreferencesModal extends Component {
 
   render() {
     return (
+      // <Modal
+      //   show={this.props.isOpen}
+      //   onHide={this.props.onCancel}
+      //   aria-labelledby="ModalHeader"
+      //   className="ModalHeader modal fade themed in"
+      //   backdrop={false}
+      //   large={true}
+      //   keyboard={false}
+      // >
+      //   <Modal.Header closeButton>
+      //     <Modal.Title>{this.props.t('User Preferences')}</Modal.Title>
+      //   </Modal.Header>
+      //   <Modal.Body>
+      //     <UserPreferences
+      //       windowLevelData={this.state.windowLevelData}
+      //       hotKeysData={this.state.hotKeysData}
+      //     />
+      //   </Modal.Body>
+      //   <Modal.Footer>
+      //     <button
+      //       className="btn btn-danger pull-left"
+      //       onClick={this.props.onResetToDefaults}
+      //     >
+      //       {this.props.t('Reset to Defaults')}
+      //     </button>
+      //     <Modal.Dismiss className="btn btn-default">
+      //       {this.props.t('Cancel')}
+      //     </Modal.Dismiss>
+      //     <button className="btn btn-primary" onClick={this.save}>
+      //       {this.props.t('Save')}
+      //     </button>
+      //   </Modal.Footer>
+      // </Modal>
+
       <Modal
-        show={this.props.isOpen}
-        onHide={this.props.onCancel}
-        aria-labelledby="ModalHeader"
-        className="ModalHeader modal fade themed in"
-        backdrop={false}
-        large={true}
-        keyboard={false}
+        open={this.props.isOpen}
+        onClose={this.props.onCancel}
+        ariaLabelledby="ModalHeader"
+        classNames={{
+          modal: 'viewer-modal ModalHeader',
+          closeButton: 'close-button',
+        }}
+        center
       >
-        <Modal.Header closeButton>
+        <Modal.Header>
           <Modal.Title>{this.props.t('User Preferences')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -84,14 +122,19 @@ class UserPreferencesModal extends Component {
         <Modal.Footer>
           <button
             className="btn btn-danger pull-left"
+            type="button"
             onClick={this.props.onResetToDefaults}
           >
             {this.props.t('Reset to Defaults')}
           </button>
-          <Modal.Dismiss className="btn btn-default">
+          <button
+            type="button"
+            className="btn btn-default"
+            onClick={this.props.onCancel}
+          >
             {this.props.t('Cancel')}
-          </Modal.Dismiss>
-          <button className="btn btn-primary" onClick={this.save}>
+          </button>
+          <button type="button" className="btn btn-primary" onClick={this.save}>
             {this.props.t('Save')}
           </button>
         </Modal.Footer>

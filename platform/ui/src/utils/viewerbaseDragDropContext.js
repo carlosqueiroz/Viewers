@@ -6,8 +6,16 @@ import TouchBackend from 'react-dnd-touch-backend';
 // TODO: Find a way for this context to be used in the parent application as well.
 
 // http://react-dnd.github.io/react-dnd/docs/api/drag-drop-context
-export default function viewerbaseDragDropContext(DecoratedClass) {
-  return DragDropContext(TouchBackend({ enableMouseEvents: true }), null, true)(
-    DecoratedClass
-  );
-}
+// export default function viewerbaseDragDropContext(DecoratedClass) {
+//   return DragDropContext(TouchBackend({ enableMouseEvents: true }), null, true)(
+//     DecoratedClass
+//   );
+// }
+
+const context = DragDropContext(
+  TouchBackend({ enableMouseEvents: true }),
+  null,
+  true
+);
+
+export default context;

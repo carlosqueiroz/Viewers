@@ -1,0 +1,12 @@
+.number-input-ohif {
+  height: 30px;
+  padding: 0 20px;
+  cursor: text;
+  border: none;
+  background-color: var(--input-background-color);
+  color: var(--input-placeholder-color);
+  font-size: 10pt;
+  font-weight: normal;
+  width: 100%;
+  border-radius: 4px;
+}

@@ -5,15 +5,21 @@ import classNames from 'classnames';
 import { MODULE_TYPES } from '@ohif/core';
 import OHIF from '@ohif/core';
 import moment from 'moment';
-import WhiteLabellingContext from '../WhiteLabellingContext.js';
-import ConnectedHeader from './ConnectedHeader.js';
-import ConnectedToolbarRow from './ConnectedToolbarRow.js';
+
+// import WhiteLabellingContext from '../WhiteLabellingContext.js';
+// import ConnectedHeader from './ConnectedHeader.js';
+// import ConnectedToolbarRow from './ConnectedToolbarRow.js';
+// import ConnectedStudyBrowser from './ConnectedStudyBrowser.js';
+// import UserManagerContext from '../UserManagerContext';
+
 import ConnectedLabellingOverlay from './ConnectedLabellingOverlay';
-import ConnectedStudyBrowser from './ConnectedStudyBrowser.js';
 import ConnectedViewerMain from './ConnectedViewerMain.js';
 import SidePanel from './../components/SidePanel.js';
 import { extensionManager } from './../App.js';
-import UserManagerContext from '../UserManagerContext';
+
+import RTTreeViewer from './RTTreeViewer';
+import RTViewerHeader from './RTViewerHeader';
+
 import './Viewer.css';
 /**
  * Inits OHIF Hanging Protocol's onReady.
@@ -212,6 +218,28 @@ class Viewer extends Component {
     }
   }
 
+  handleSidePanelChange = (side, selectedPanel) => {
+    const sideClicked = side && side[0].toUpperCase() + side.slice(1);
+    const openKey = `is${sideClicked}SidePanelOpen`;
+    const selectedKey = `selected${sideClicked}SidePanel`;
+    const updatedState = Object.assign({}, this.state);
+
+    const isOpen = updatedState[openKey];
+    const prevSelectedPanel = updatedState[selectedKey];
+    // RoundedButtonGroup returns `null` if selected button is clicked
+    const isSameSelectedPanel =
+      prevSelectedPanel === selectedPanel || selectedPanel === null;
+
+    updatedState[selectedKey] = selectedPanel || prevSelectedPanel;
+
+    const isClosedOrShouldClose = !isOpen || isSameSelectedPanel;
+    if (isClosedOrShouldClose) {
+      updatedState[openKey] = !updatedState[openKey];
+    }
+
+    this.setState(updatedState);
+  };
+
   render() {
     let VisiblePanelLeft, VisiblePanelRight;
     const panelExtensions = extensionManager.modules[MODULE_TYPES.PANEL];
@@ -229,7 +257,7 @@ class Viewer extends Component {
     return (
       <>
         {/* HEADER */}
-        <WhiteLabellingContext.Consumer>
+        {/* <WhiteLabellingContext.Consumer>
           {whiteLabelling => (
             <UserManagerContext.Consumer>
               {userManager => (
@@ -239,10 +267,10 @@ class Viewer extends Component {
               )}
             </UserManagerContext.Consumer>
           )}
-        </WhiteLabellingContext.Consumer>
+        </WhiteLabellingContext.Consumer> */}
 
         {/* TOOLBAR */}
-        <ConnectedToolbarRow
+        {/* <ConnectedToolbarRow
           isLeftSidePanelOpen={this.state.isLeftSidePanelOpen}
           isRightSidePanelOpen={this.state.isRightSidePanelOpen}
           selectedLeftSidePanel={
@@ -255,27 +283,21 @@ class Viewer extends Component {
               ? this.state.selectedRightSidePanel
               : ''
           }
-          handleSidePanelChange={(side, selectedPanel) => {
-            const sideClicked = side && side[0].toUpperCase() + side.slice(1);
-            const openKey = `is${sideClicked}SidePanelOpen`;
-            const selectedKey = `selected${sideClicked}SidePanel`;
-            const updatedState = Object.assign({}, this.state);
+          handleSidePanelChange={this.handleSidePanelChange}
+        /> */}
 
-            const isOpen = updatedState[openKey];
-            const prevSelectedPanel = updatedState[selectedKey];
-            // RoundedButtonGroup returns `null` if selected button is clicked
-            const isSameSelectedPanel =
-              prevSelectedPanel === selectedPanel || selectedPanel === null;
-
-            updatedState[selectedKey] = selectedPanel || prevSelectedPanel;
-
-            const isClosedOrShouldClose = !isOpen || isSameSelectedPanel;
-            if (isClosedOrShouldClose) {
-              updatedState[openKey] = !updatedState[openKey];
-            }
-
-            this.setState(updatedState);
-          }}
+        <RTViewerHeader
+          selectedLeftSidePanel={
+            this.state.isLeftSidePanelOpen
+              ? this.state.selectedLeftSidePanel
+              : ''
+          }
+          selectedRightSidePanel={
+            this.state.isRightSidePanelOpen
+              ? this.state.selectedRightSidePanel
+              : ''
+          }
+          handleSidePanelChange={this.handleSidePanelChange}
         />
 
         {/*<ConnectedStudyLoadingMonitor studies={this.props.studies} />*/}
@@ -291,7 +313,8 @@ class Viewer extends Component {
                 activeIndex={this.props.activeViewportIndex}
               />
             ) : (
-              <ConnectedStudyBrowser studies={this.state.thumbnails} />
+              // <ConnectedStudyBrowser studies={this.state.thumbnails} />
+              <RTTreeViewer studies={this.props.studies} />
             )}
           </SidePanel>
 
@@ -354,6 +377,8 @@ const _mapStudiesToThumbnails = function(studies) {
         const imageIndex = Math.floor(displaySet.images.length / 2);
 
         imageId = displaySet.images[imageIndex].getImageId();
+      } else if (displaySet.displayName) {
+        altImageText = displaySet.displayName;
       } else {
         altImageText = displaySet.modality ? displaySet.modality : 'UN';
       }

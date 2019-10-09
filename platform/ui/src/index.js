@@ -12,6 +12,7 @@ import {
   SelectTree,
   SimpleDialog,
   StudyBrowser,
+  PatientList,
   StudyList,
   TableList,
   TableListItem,
@@ -21,11 +22,18 @@ import {
   AboutModal,
   UserPreferences,
   UserPreferencesModal,
+  Modal,
 } from './components';
 import { ICONS, Icon } from './elements';
 
 // Alias this for now as not all dependents are using strict versioning
-import { DropdownMenu as Dropdown } from './elements/form';
+import {
+  DropdownMenu as Dropdown,
+  Range as RangeInput,
+  TextInput,
+  NumberInput,
+  Select as SelectInput
+} from './elements/form';
 import ExpandableToolMenu from './viewer/ExpandableToolMenu.js';
 import LayoutManager from './LayoutChooser/LayoutManager.js';
 import LayoutPanelDropTarget from './LayoutChooser/LayoutPanelDropTarget.js';
@@ -40,6 +48,10 @@ export {
   //
   CineDialog,
   Dropdown,
+  RangeInput,
+  TextInput,
+  NumberInput,
+  SelectInput,
   ExpandableToolMenu,
   ExampleDropTarget,
   Icon,
@@ -58,6 +70,7 @@ export {
   SelectTree,
   SimpleDialog,
   StudyBrowser,
+  PatientList,
   StudyList,
   TableList,
   TableListItem,
@@ -70,4 +83,5 @@ export {
   UserPreferences,
   UserPreferencesModal,
   ViewerbaseDragDropContext,
+  Modal,
 };

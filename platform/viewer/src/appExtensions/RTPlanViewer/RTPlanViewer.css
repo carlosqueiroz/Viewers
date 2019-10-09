@@ -1,0 +1,21 @@
+:root {
+  --text-color-primary: white;
+}
+
+.RTPlanViewer {
+  padding: 10px;
+  overflow-y: scroll;
+  width: 100%;
+  height: 100%;
+  color: var(--text-color-primary);
+}
+
+.ErrorContainer, .LoadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  color: var(--text-color-primary);
+  font-size: 18px;
+}

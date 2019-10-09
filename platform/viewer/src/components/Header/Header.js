@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import { Dropdown } from '@ohif/ui';
 import OHIFLogo from '../OHIFLogo/OHIFLogo.js';
 import PropTypes from 'prop-types';
-import { AboutModal } from '@ohif/ui';
+import { AboutModal, UserPreferencesModal } from '@ohif/ui';
 import { hotkeysManager } from './../../App.js';
 import { withTranslation } from 'react-i18next';
 
@@ -17,7 +17,7 @@ class Header extends Component {
     location: PropTypes.object.isRequired,
     children: PropTypes.node,
     t: PropTypes.func.isRequired,
-    userManager: PropTypes.object
+    userManager: PropTypes.object,
   };
 
   static defaultProps = {
@@ -63,10 +63,10 @@ class Header extends Component {
     if (this.props.user && this.props.userManager) {
       this.options.push({
         title: t('Logout'),
-          icon: { name: 'power-off' },
-          onClick: () => {
-            this.props.userManager.signoutRedirect();
-          },
+        icon: { name: 'power-off' },
+        onClick: () => {
+          this.props.userManager.signoutRedirect();
+        },
       });
     }
 
@@ -121,6 +121,14 @@ class Header extends Component {
             onCancel={() =>
               this.setState({
                 isOpen: false,
+              })
+            }
+          />
+          <UserPreferencesModal
+            isOpen={this.state.isUserPreferencesOpen}
+            onCancel={() =>
+              this.setState({
+                isUserPreferencesOpen: false,
               })
             }
           />

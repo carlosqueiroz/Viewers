@@ -22,10 +22,31 @@ function createAndAddStack(
   stackUpdatedCallbacks,
   metadataProvider
 ) {
-  const images = displaySet.images;
+  let images = displaySet.images;
   if (!images) {
     return;
   }
+
+  const ManufacturerModelName = study.ManufacturerModelName
+    ? study.ManufacturerModelName.toLowerCase()
+    : '';
+  images = images.sort((a, b) => {
+    return ManufacturerModelName === 'xio' &&
+      a.getDataProperty('sliceLocation') &&
+      b.getDataProperty('sliceLocation')
+      ? a.getDataProperty('sliceLocation') - b.getDataProperty('sliceLocation')
+      : a.getDataProperty('instanceNumber') -
+          b.getDataProperty('instanceNumber');
+  });
+  // console.log(
+  //   'images',
+  //   images.map(img => {
+  //     return {
+  //       instanceNumber: img.getDataProperty('instanceNumber'),
+  //       sliceLocation: img.getDataProperty('sliceLocation'),
+  //     };
+  //   })
+  // );
 
   const numImages = images.length;
   const imageIds = [];

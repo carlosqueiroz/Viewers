@@ -38,6 +38,9 @@ module.exports = (env, argv, { SRC_DIR, DIST_DIR }) => {
       extensions: ['.js', '.jsx', '.json', '*'],
       // symlinked resources are resolved to their real path, not their symlinked location
       symlinks: true,
+      alias: {
+        'react-dom': '@hot-loader/react-dom',
+      },
     },
     plugins: [
       new webpack.DefinePlugin({

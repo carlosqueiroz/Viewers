@@ -26,6 +26,11 @@ const divTarget = {
       item,
     };
   },
+
+  // hover() {
+  //   if (!document.body.classList.contains('react-dnd-hover'))
+  //     document.body.classList.add('react-dnd-hover');
+  // }
 };
 
 // TODO: Find out why we can't move this into the Example app instead.

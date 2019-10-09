@@ -1,24 +1,54 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
-import OHIF from '@ohif/core';
+import moment from 'moment';
 import { withRouter } from 'react-router-dom';
 import { withTranslation } from 'react-i18next';
-import { StudyList } from '@ohif/ui';
+import axios from 'axios';
+
+import OHIF from '@ohif/core';
+import { PatientList, StudyList, Icon } from '@ohif/ui';
+
 import ConnectedHeader from '../connectedComponents/ConnectedHeader.js';
-import moment from 'moment';
+import UserManagerContext from '../UserManagerContext';
+import WhiteLabellingContext from '../WhiteLabellingContext';
+
 import ConnectedDicomFilesUploader from '../googleCloud/ConnectedDicomFilesUploader';
 import ConnectedDicomStorePicker from '../googleCloud/ConnectedDicomStorePicker';
 import filesToStudies from '../lib/filesToStudies.js';
-import UserManagerContext from '../UserManagerContext';
-import WhiteLabellingContext from '../WhiteLabellingContext';
+import animatedScrollToElement from '../utils/animatedScrollToElement';
+
+import { RTHeader } from './RTHeader';
+
+const defaultDateFilterNumDays = 25000;
+const defaultPatientSearchData = {
+  currentPage: 1,
+  rowsPerPage: 5,
+  dateFrom: moment()
+    .subtract(defaultDateFilterNumDays, 'days')
+    .toDate(),
+  dateTo: new Date(),
+  sortData: { field: 'updated_time', order: 'desc' },
+};
+const defaultStudySearchData = {
+  // currentPage: 1,
+  // rowsPerPage: 5,
+  dateFrom: moment()
+    .subtract(defaultDateFilterNumDays, 'days')
+    .toDate(),
+  dateTo: new Date(),
+  sortData: { field: 'StudyDate', order: 'asc' },
+};
 
 class StudyListWithData extends Component {
   state = {
     searchData: {},
     studies: [],
+    patients: [],
     error: null,
     modalComponentId: null,
+    selectedPatient: null,
+    selectedStudies: [],
   };
 
   static propTypes = {
@@ -34,22 +64,6 @@ class StudyListWithData extends Component {
     studyListFunctionsEnabled: true,
   };
 
-  static rowsPerPage = 25;
-  static defaultSort = { field: 'patientName', order: 'desc' };
-
-  static studyListDateFilterNumDays = 25000; // TODO: put this in the settings
-  static defaultStudyDateFrom = moment()
-    .subtract(StudyListWithData.studyListDateFilterNumDays, 'days')
-    .toDate();
-  static defaultStudyDateTo = new Date();
-  static defaultSearchData = {
-    currentPage: 0,
-    rowsPerPage: StudyListWithData.rowsPerPage,
-    studyDateFrom: StudyListWithData.defaultStudyDateFrom,
-    studyDateTo: StudyListWithData.defaultStudyDateTo,
-    sortData: StudyListWithData.defaultSort,
-  };
-
   componentDidMount() {
     // TODO: Avoid using timepoints here
     //const params = { studyInstanceUids, seriesInstanceUids, timepointId, timepointsFilter={} };
@@ -58,16 +72,16 @@ class StudyListWithData extends Component {
         modalComponentId: 'DicomStorePicker',
       });
     } else {
-      this.searchForStudies({
-        ...StudyListWithData.defaultSearchData,
+      this.searchForPatients({
+        ...defaultPatientSearchData,
         ...(this.props.filters || {}),
       });
     }
   }
 
   componentDidUpdate(prevProps) {
-    if (!this.state.searchData && !this.state.studies) {
-      this.searchForStudies();
+    if (!this.state.searchData && !this.state.patients) {
+      this.searchForPatients();
     }
     if (this.props.server !== prevProps.server) {
       this.setState({
@@ -78,25 +92,31 @@ class StudyListWithData extends Component {
     }
   }
 
-  searchForStudies = (searchData = StudyListWithData.defaultSearchData) => {
+  searchForStudies = (searchData = defaultStudySearchData) => {
     const { server } = this.props;
+
+    let orderby = searchData.sortData ? searchData.sortData.field : undefined;
+    if (orderby)
+      orderby = (searchData.sortData.order === 'asc' ? '-' : '') + orderby;
+
     const filter = {
-      patientId: searchData.patientId,
-      patientName: searchData.patientName,
+      patientId: this.state.selectedPatient,
+      // patientId: searchData.patientId,
+      // patientName: searchData.patientName,
       accessionNumber: searchData.accessionNumber,
       studyDescription: searchData.studyDescription,
       modalitiesInStudy: searchData.modalities,
       studyDateFrom: searchData.studyDateFrom,
       studyDateTo: searchData.studyDateTo,
-      limit: searchData.rowsPerPage,
-      offset: searchData.currentPage * searchData.rowsPerPage,
+      // limit: searchData.rowsPerPage,
+      // offset: (searchData.currentPage-1) * searchData.rowsPerPage,
+      orderby,
     };
 
-    if (server.supportsFuzzyMatching) {
-      filter.fuzzymatching = true;
-    }
+    // if (server.supportsFuzzyMatching) {
+    filter.fuzzymatching = true;
+    // }
 
-    // TODO: add sorting
     const promise = OHIF.studies.searchStudies(server, filter);
 
     // Render the viewer when the data is ready
@@ -106,44 +126,69 @@ class StudyListWithData extends Component {
           studies = [];
         }
 
-        const { field, order } = searchData.sortData;
-        let sortedStudies = studies.map(study => {
-          if (!moment(study.studyDate, 'MMM DD, YYYY', true).isValid()) {
+        studies = studies.map(study => {
+          if (!moment(study.studyDate, 'DD/MM/YYYY', true).isValid()) {
             study.studyDate = moment(study.studyDate, 'YYYYMMDD').format(
-              'MMM DD, YYYY'
+              'DD/MM/YYYY'
             );
           }
           return study;
         });
 
-        sortedStudies.sort(function(a, b) {
-          let fieldA = a[field];
-          let fieldB = b[field];
-          if (field === 'studyDate') {
-            fieldA = moment(fieldA).toISOString();
-            fieldB = moment(fieldB).toISOString();
+        this.setState({ studies }, this.scrollToStudyList);
+      })
+      .catch(error => {
+        this.setState({
+          error: true,
+        });
+
+        throw new Error(error);
+      });
+  };
+
+  scrollToStudyList = () => {
+    // animatedScrollToElement(document.body || document.documentElement,
+    //   document.querySelector(".StudyList"),
+    //   1000);
+    animatedScrollToElement(document.querySelector('.StudyList'));
+  };
+
+  searchForPatients = (searchData = defaultPatientSearchData) => {
+    const filter = {
+      PatientID: searchData.PatientID,
+      PatientName: searchData.PatientName,
+      NumStudies: searchData.NumStudies,
+      updated_time: searchData.updated_time,
+      patientDateFrom: moment(searchData.dateFrom).toISOString(),
+      patientDateTo: moment(searchData.dateTo).toISOString(),
+      limit: searchData.rowsPerPage,
+      page: searchData.currentPage,
+      sort: searchData.sortData,
+    };
+
+    const promise = axios.get(
+      `https://${window.location.hostname}/api/viewer/pacs/patients`,
+      { params: filter }
+    );
+
+    promise
+      .then(({ data: patients }) => {
+        if (!patients) {
+          patients = [];
+        }
+
+        patients = patients.map(patient => {
+          if (!moment(patient.updated_time, 'DD/MM/YYYY', true).isValid()) {
+            patient.updated_time = moment(
+              patient.updated_time,
+              'YYYYMMDD'
+            ).format('DD/MM/YYYY');
           }
-          if (order === 'desc') {
-            if (fieldA < fieldB) {
-              return -1;
-            }
-            if (fieldA > fieldB) {
-              return 1;
-            }
-            return 0;
-          } else {
-            if (fieldA > fieldB) {
-              return -1;
-            }
-            if (fieldA < fieldB) {
-              return 1;
-            }
-            return 0;
-          }
+          return patient;
         });
 
         this.setState({
-          studies: sortedStudies,
+          patients,
         });
       })
       .catch(error => {
@@ -169,11 +214,46 @@ class StudyListWithData extends Component {
     this.setState({ modalComponentId: null });
   };
 
-  onSelectItem = studyInstanceUID => {
-    this.props.history.push(`/viewer/${studyInstanceUID}`);
+  onSelectStudy = (studyInstanceUID, checked) => {
+    if (checked)
+      this.setState(prev => ({
+        selectedStudies: [...prev.selectedStudies, studyInstanceUID],
+      }));
+    else
+      this.setState(prev => ({
+        selectedStudies: prev.selectedStudies.filter(
+          uid => uid !== studyInstanceUID
+        ),
+      }));
+
+    // this.props.history.push(`/viewer/${studyInstanceUID}`);
   };
 
-  onSearch = searchData => {
+  onSelectPatient = PatientID => {
+    if (this.state.selectedPatient === PatientID)
+      this.setState({
+        selectedPatient: null,
+        studies: [],
+      });
+    else {
+      this.setState(
+        {
+          selectedPatient: PatientID,
+        },
+        this.searchForStudies
+      );
+    }
+  };
+
+  onSearchPatient = searchData => {
+    // this.setState({ selectedStudies: [] });
+    // this.searchForStudies(searchData);
+    this.setState({ selectedPatient: null });
+    this.searchForPatients(searchData);
+  };
+
+  onSearchStudy = searchData => {
+    this.setState({ selectedStudies: [] });
     this.searchForStudies(searchData);
   };
 
@@ -181,6 +261,39 @@ class StudyListWithData extends Component {
     this.setState({
       modalComponentId: null,
     });
+  };
+
+  onFloatingBtnClick = () => {
+    const uids = this.state.selectedStudies.join(';');
+    this.props.history.push(`/viewer/${uids}`);
+  };
+
+  renderFloatingButton = () => {
+    if (!this.state.selectedStudies.length) return null;
+
+    const styles = {
+      bottom: '30px',
+      right: '30px',
+      position: 'fixed',
+      zIndex: '1000',
+      display: 'block',
+      width: '48px',
+      height: '48px',
+      borderRadius: '50%',
+      fontSize: '25px',
+      lineHeight: '41px',
+      color: 'white',
+    };
+    return (
+      <button
+        className="btn btn-lg btn-primary"
+        onClick={this.onFloatingBtnClick}
+        style={styles}
+        title={this.props.t('OpenStudies')}
+      >
+        <Icon name="RT_Send_Report_PACS" />
+      </button>
+    );
   };
 
   render() {
@@ -227,20 +340,16 @@ class StudyListWithData extends Component {
       );
     }
 
-    const studyList = (
+    const patientList = (
       <div className="paginationArea">
-        {this.state.studies ? (
-          <StudyList
-            studies={this.state.studies}
-            studyListFunctionsEnabled={this.props.studyListFunctionsEnabled}
-            onImport={this.onImport}
-            onSelectItem={this.onSelectItem}
-            pageSize={this.rowsPerPage}
-            defaultSort={StudyListWithData.defaultSort}
-            studyListDateFilterNumDays={
-              StudyListWithData.studyListDateFilterNumDays
-            }
-            onSearch={this.onSearch}
+        {this.state.patients ? (
+          <PatientList
+            patients={this.state.patients}
+            onSelectItem={this.onSelectPatient}
+            pageSize={defaultPatientSearchData.rowsPerPage}
+            defaultSort={defaultPatientSearchData.sortData}
+            patientListDateFilterNumDays={defaultDateFilterNumDays}
+            onSearch={this.onSearchPatient}
           >
             {this.props.studyListFunctionsEnabled ? (
               <ConnectedDicomFilesUploader
@@ -250,7 +359,7 @@ class StudyListWithData extends Component {
             ) : null}
             {healthCareApiButtons}
             {healthCareApiWindows}
-          </StudyList>
+          </PatientList>
         ) : (
           <Dropzone onDrop={onDrop}>
             {({ getRootProps, getInputProps }) => (
@@ -270,9 +379,27 @@ class StudyListWithData extends Component {
         )}
       </div>
     );
+
+    const studyList = (
+      <div className="paginationArea">
+        {this.state.studies ? (
+          <StudyList
+            studies={this.state.studies}
+            studyListFunctionsEnabled={this.props.studyListFunctionsEnabled}
+            onImport={this.onImport}
+            onSelectItem={this.onSelectStudy}
+            pageSize={defaultStudySearchData.rowsPerPage}
+            defaultSort={defaultStudySearchData.sortData}
+            studyListDateFilterNumDays={defaultDateFilterNumDays}
+            onSearch={this.onSearchStudy}
+            selectedStudies={this.state.selectedStudies}
+          />
+        ) : null}
+      </div>
+    );
     return (
       <>
-        <WhiteLabellingContext.Consumer>
+        {/* <WhiteLabellingContext.Consumer>
           {whiteLabelling => (
             <UserManagerContext.Consumer>
               {userManager => (
@@ -286,8 +413,11 @@ class StudyListWithData extends Component {
               )}
             </UserManagerContext.Consumer>
           )}
-        </WhiteLabellingContext.Consumer>
+        </WhiteLabellingContext.Consumer> */}
+        <RTHeader />
+        {patientList}
         {studyList}
+        {this.renderFloatingButton()}
       </>
     );
   }

@@ -1,0 +1,65 @@
+@import './../../design/styles/common/form.styl'
+@import './../../design/styles/common/global.styl'
+
+$patient-list-padding = 8%;
+$patient-list-toolbar-height = 75px;
+$tablePaddingMediumScreen = 5px
+
+.patientListToolbar
+  background-color: var(--ui-gray-darker)
+  height: $patient-list-toolbar-height
+  margin-bottom: 2px
+  padding: 0 $patient-list-padding
+
+  &>div
+    display: inline-block
+
+  .header
+    font-size: 22px
+    font-weight: 300
+    color: var(--table-text-secondary-color)
+    line-height: $patient-list-toolbar-height
+
+  .patientlistToolbar
+    height: $patient-list-toolbar-height
+    line-height: $patient-list-toolbar-height
+
+  .patientCount
+    color: var(--large-numbers-color)
+    font-size: 40px
+    font-weight: 100
+    line-height: $patient-list-toolbar-height
+
+.theadBackground
+  height: 121px
+  position: absolute
+  width: 100%
+
+  &:before, &:after
+    content: ''
+    display: block
+    left: 0
+    position: absolute
+    width: 100%
+
+  &:before
+    background-color: var(--ui-gray-darker)
+    height: 100%
+    top: 0
+    z-index: 1
+
+  &:after
+    background-color: var(--ui-border-color-active)
+    bottom: -1px
+    height: 1px
+    z-index: 2
+
+@media only screen and (max-width: 1069px)
+  .theadBackground
+    height: 101px
+
+  .patientlist-pagination > .row
+    margin-right: 0;
+
+  .patientListToolbar
+    padding: 0 $tablePaddingMediumScreen

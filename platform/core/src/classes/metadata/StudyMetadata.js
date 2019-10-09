@@ -164,6 +164,7 @@ export class StudyMetadata extends Metadata {
             numImageFrames: instance.getRawValue('x00280008'), // Override the default value of instances.length
             instanceNumber: instance.getRawValue('x00200013'), // Include the instance number
             acquisitionDatetime: instance.getRawValue('x0008002a'), // Include the acquisition datetime
+            viewPosition: instance.getRawValue('x00185101'),
           });
           displaySets.push(displaySet);
         } else if (isSingleImageModality(instance.modality)) {
@@ -174,11 +175,13 @@ export class StudyMetadata extends Metadata {
             seriesInstanceUid: series.getSeriesInstanceUID(),
             instanceNumber: instance.getRawValue('x00200013'), // Include the instance number
             acquisitionDatetime: instance.getRawValue('x0008002a'), // Include the acquisition datetime
+            viewPosition: instance.getRawValue('x00185101'),
           });
           displaySets.push(displaySet);
         } else {
           stackableInstances.push(instance);
         }
+        // console.log('instance', instance);
       });
 
       if (stackableInstances.length) {
@@ -555,6 +558,7 @@ const makeDisplaySet = (series, instances) => {
     frameRate: instance.getRawValue('x00181063'),
     modality: instance.getRawValue('x00080060'),
     isMultiFrame: isMultiFrame(instance),
+    viewPosition: instance.getRawValue('x00185101'),
   });
 
   // Sort the images in this series if needed

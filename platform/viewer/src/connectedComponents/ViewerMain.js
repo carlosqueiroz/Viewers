@@ -1,10 +1,13 @@
 import './ViewerMain.css';
 
+import OHIF from "@ohif/core";
 import { Component } from 'react';
 import ConnectedLayoutManager from './ConnectedLayoutManager.js';
 import ConnectedToolContextMenu from './ConnectedToolContextMenu.js';
 import PropTypes from 'prop-types';
 import React from 'react';
+
+import cornerstone from 'cornerstone-core';
 
 class ViewerMain extends Component {
   static propTypes = {
@@ -107,15 +110,18 @@ class ViewerMain extends Component {
         );
         viewportData.push(Object.assign({}, originalDisplaySet, displaySet));
       } else {
+        // PS: Deixar viewport em branco quando ela é criada
         // If the viewport is empty, get one available in study
-        const { displaySets } = this.state;
-        displaySet = displaySets.find(
-          ds =>
-            !viewportData.some(
-              v => v.displaySetInstanceUid === ds.displaySetInstanceUid
-            )
-        );
-        viewportData.push(Object.assign({}, displaySet));
+        // const { displaySets } = this.state;
+        // console.log('displaySets', displaySets);
+        // displaySet = displaySets.find(
+        //   ds =>
+        //     !viewportData.some(
+        //       v => v.displaySetInstanceUid === ds.displaySetInstanceUid
+        //     )
+        // );
+        // viewportData.push(Object.assign({}, displaySet));
+        viewportData.push(null);
       }
     }
 
@@ -158,24 +164,45 @@ class ViewerMain extends Component {
       this.props.clearViewportSpecificData(viewportIndex);
     });
 
+    this.props.rtDataClearAllData();
+    this.props.toolsStateClearAllData();
+
     // TODO: These don't have to be viewer specific?
     // Could qualify for other routes?
     // hotkeys.destroy();
 
     // Remove beforeUnload event handler...
-    //window.removeEventListener('beforeunload', unloadHandlers.beforeUnload);
+    // window.removeEventListener('beforeunload', unloadHandlers.beforeUnload);
+
     // Destroy the synchronizer used to update reference lines
-    //OHIF.viewer.updateImageSynchronizer.destroy();
+    // OHIF.viewer.updateImageSynchronizer.destroy();
+
     // TODO: Instruct all plugins to clean up themselves
     //
+
     // Clear references to all stacks in the StackManager
-    //StackManager.clearStacks();
-    // @TypeSafeStudies
+    OHIF.utils.StackManager.clearStacks();
+
     // Clears OHIF.viewer.Studies collection
-    //OHIF.viewer.Studies.removeAll();
-    // @TypeSafeStudies
+    // OHIF.viewer.Studies.removeAll();
+    OHIF.utils.studyMetadataManager.purge();
+
     // Clears OHIF.viewer.StudyMetadataList collection
-    //OHIF.viewer.StudyMetadataList.removeAll();
+    // OHIF.viewer.StudyMetadataList.removeAll();
+
+    // Clears Cornerstone image cache
+    // https://github.com/cornerstonejs/cornerstoneWADOImageLoader/pull/223/files
+    cornerstone.imageCache.cachedImages.forEach(({imageId}) => {
+      const imgLoadObj = cornerstone.imageCache.getImageLoadObject(imageId);
+      if (imgLoadObj && imgLoadObj.cancelFn) {
+        imgLoadObj.cancelFn();
+      }
+    });
+    cornerstone.imageCache.purgeCache();
+    cornerstone.webGL.textureCache.purgeCache();
+    window.cornerstoneWADOImageLoader.wadors.metaDataManager.purge();
+    window.cornerstoneWADOImageLoader.wadouri.dataSetCacheManager.purge();
+    window.cornerstoneWADOImageLoader.wadouri.fileManager.purge();
   }
 }
 

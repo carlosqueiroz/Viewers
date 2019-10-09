@@ -3,7 +3,13 @@ import cornerstone from 'cornerstone-core';
 import cornerstoneMath from 'cornerstone-math';
 import cornerstoneTools from 'cornerstone-tools';
 
-export default function(configuration = {}) {
+import DrawContourTool from './appTools/DrawContourTool';
+import DrawDoseTool from './appTools/DrawDoseTool';
+import DrawBeamLinesTool from './appTools/DrawBeamLinesTool';
+import DrawFusionTool from './appTools/DrawFusionTool';
+import { FusionPanTool, FusionZoomTool } from './appTools/FusionTools';
+
+export default function(store, configuration = {}) {
   // For debugging
   window.cornerstoneTools = cornerstoneTools;
 
@@ -24,4 +30,19 @@ export default function(configuration = {}) {
   cornerstoneTools.toolColors.setActiveColor('rgb(0, 255, 0)');
 
   cornerstoneTools.store.state.touchProximity = 40;
+
+  cornerstoneTools.addTool(DrawContourTool);
+  cornerstoneTools.setToolActive('DrawContourTool');
+
+  cornerstoneTools.addTool(DrawDoseTool);
+  // cornerstoneTools.setToolActive('DrawDoseTool');
+
+  cornerstoneTools.addTool(DrawBeamLinesTool);
+  cornerstoneTools.setToolActive('DrawBeamLinesTool');
+
+  cornerstoneTools.addTool(DrawFusionTool);
+  cornerstoneTools.setToolActive('DrawFusionTool');
+
+  cornerstoneTools.addTool(FusionPanTool);
+  cornerstoneTools.addTool(FusionZoomTool);
 }

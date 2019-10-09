@@ -1,0 +1,59 @@
+.graph_container {
+  width: 100%;
+  max-width: 1000px;
+  /*height: 100%;
+  min-height: 400px;*/
+  height: 508px;
+  padding-top: 5px;
+  margin-top: 5px;
+  background: white;
+  box-sizing: border-box;
+  position: relative;
+
+  /*padding-bottom: 15px;*/
+  /*display: inline-block;
+  vertical-align: top;*/
+}
+.graph_container > div {
+  background: white;
+}
+
+.legend_container {
+  /*display: inline-block;
+  vertical-align: top;*/
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 1000px;
+
+  margin-top: 10px;
+
+  background-color: rgba(200, 200, 255, 0.75);
+  padding: 4px;
+  border: 1px solid black;
+  border-radius: 10px;
+  /*box-shadow: 4px 4px 4px #888;*/
+  /*min-width: 100px;*/
+}
+.legend_container span[data-id] {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  padding: 0 5px;
+}
+.legend_container span[data-visible='false'] {
+  color: gray;
+}
+.legend_container span[data-id] > div.dygraph-legend-line {
+  bottom: inherit;
+}
+
+.legend_overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #9c9;
+  display: none;
+  padding: 5px;
+  border-radius: 5px;
+}

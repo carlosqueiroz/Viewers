@@ -1,0 +1,33 @@
+FROM node:12.9.1-slim
+
+WORKDIR /app
+
+COPY package.json yarn.lock* ./
+
+COPY platform/core/package.json ./platform/core/package.json
+COPY platform/i18n/package.json ./platform/i18n/package.json
+COPY platform/ui/package.json ./platform/ui/package.json
+COPY platform/viewer/package.json ./platform/viewer/package.json
+
+COPY extensions/cornerstone/package.json ./extensions/cornerstone/package.json
+COPY extensions/dicom-html/package.json ./extensions/dicom-html/package.json
+COPY extensions/dicom-microscopy/package.json ./extensions/dicom-microscopy/package.json
+COPY extensions/dicom-pdf/package.json ./extensions/dicom-pdf/package.json
+COPY extensions/vtk/package.json ./extensions/vtk/package.json
+
+RUN yarn config set workspaces-experimental true
+RUN yarn cache clean
+RUN yarn install --pure-lockfile
+
+ENV PATH /app/node_modules/.bin:$PATH
+ENV GENERATE_SOURCEMAP=false
+ENV REACT_APP_CONFIG=config/default.js
+
+#COPY src ./
+#COPY public ./
+#COPY .babelrc ./
+#COPY .eslintrc ./
+
+EXPOSE 5000
+
+CMD ["yarn", "run", "dev"]

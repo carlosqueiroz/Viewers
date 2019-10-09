@@ -7,7 +7,7 @@ export const defaultState = {
 const servers = (state = defaultState, action) => {
   switch (action.type) {
     case 'ADD_SERVER':
-      let servers = uniqBy([...state.servers, action.server], 'id');
+      let servers = uniqBy([...state.servers, action.server], 'name');
       servers.forEach(s => (s.active = true));
       return { ...state, servers };
 

@@ -11,5 +11,9 @@
   "Series": "Series",
   "Show": "Show",
   "Stop": "Stop",
-  "StudyDate": "Study Date"
+  "StudyDate": "Study Date",
+  "OpenStudies": "Open Studies",
+  "Loading": "Loading...",
+  "ErrorWhileFetchingData": "There was an error while fetching the data",
+  "NoResults": "No matching results"
 }

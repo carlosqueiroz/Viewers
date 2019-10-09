@@ -81,12 +81,12 @@ const actions = {
   },
   // TODO: this is receiving `evt` from `ToolbarRow`. We could use it to have
   //       better mouseButtonMask sets.
-  setToolActive: ({ toolName }) => {
-    if (!toolName) {
-      console.warn('No toolname provided to setToolActive command');
-    }
-    cornerstoneTools.setToolActive(toolName, { mouseButtonMask: 1 });
-  },
+  // setToolActive: ({ toolName }) => {
+  //   if (!toolName) {
+  //     console.warn('No toolname provided to setToolActive command');
+  //   }
+  //   cornerstoneTools.setToolActive(toolName, { mouseButtonMask: 1 });
+  // },
   updateViewportDisplaySet: ({ direction }) => {
     // TODO
     console.warn('updateDisplaySet: ', direction);
@@ -238,11 +238,11 @@ const definitions = {
     options: { direction: -1 },
   },
   // TOOLS
-  setToolActive: {
-    commandFn: actions.setToolActive,
-    storeContexts: [],
-    options: {},
-  },
+  // setToolActive: {
+  //   commandFn: actions.setToolActive,
+  //   storeContexts: [],
+  //   options: {},
+  // },
 };
 
 /**

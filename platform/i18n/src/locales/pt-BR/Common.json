@@ -6,5 +6,11 @@
   "Play": "Play",
   "Previous": "Anterior",
   "Reset": "Reset",
-  "Stop": "Stop"
+  "Stop": "Stop",
+  "OpenStudies": "Abrir Estudos",
+  "RowsPerPage": "linhas por pagina",
+  "Show": "Mostrar",
+  "Loading": "Carregando...",
+  "ErrorWhileFetchingData": "Ocorreu um erro ao buscar os dados",
+  "NoResults": "Nenhum resultado correspondente"
 }

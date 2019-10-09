@@ -1,0 +1,48 @@
+.viewer-modal
+  background-color: var(--ui-gray-darker)
+  border-color: var(--ui-border-color)
+  color: var(--text-secondary-color)
+  border: 0
+  min-width: 600px
+
+  .viewer-modal-header
+    border-bottom-width: 3px
+    border-bottom-style: solid
+    border-bottom-color: #000
+
+    h4
+      margin: 0
+      margin-bottom: 15px
+      color: var(--text-secondary-color)
+      font-size: 20px
+      font-weight: 500
+      line-height: 24px
+
+  .viewer-modal-body
+    max-height: 80vh
+    overflow-y: auto
+    color: var(--text-primary-color)
+    position: relative
+
+  .viewer-modal-footer
+    border-top: 0
+    padding-top: 0
+    border-color: var(--ui-border-color)
+    padding: 15px 0
+    padding-bottom: 0
+    text-align: right
+    border-top: 1px solid #e5e5e5
+
+
+  .close-button
+    fill: white
+
+.viewer-modal .viewer-modal-footer .btn + .btn
+  margin-left: 5px
+  margin-bottom: 0
+
+.viewer-modal .viewer-modal-footer .btn-group .btn + .btn
+  margin-left: -1px
+
+.viewer-modal .viewer-modal-footer .btn-block + .btn-block
+  margin-left: 0

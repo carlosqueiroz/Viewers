@@ -20,6 +20,8 @@ const MEASUREMENT_ACTION_MAP = {
   }, 300),
 };
 
+const emptyObj = {};
+
 const mapStateToProps = (state, ownProps) => {
   let dataFromStore;
 
@@ -40,7 +42,7 @@ const mapStateToProps = (state, ownProps) => {
   const { viewportIndex } = ownProps; //.viewportData;
   const isActive = viewportIndex === state.viewports.activeViewportIndex;
   const viewportSpecificData =
-    state.viewports.viewportSpecificData[viewportIndex] || {};
+    state.viewports.viewportSpecificData[viewportIndex] || emptyObj;
 
   return {
     layout: state.viewports.layout,

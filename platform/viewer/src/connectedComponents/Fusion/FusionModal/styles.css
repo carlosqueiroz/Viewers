@@ -1,0 +1,33 @@
+.modal-backdrop {
+  background: rgba(0,0,0,0.5);
+}
+
+.fusion-modal .table-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.fusion-modal .table-header {
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  border-top: 1px solid white;
+  border-bottom: 1px solid white;
+  margin: 10px 0;
+}
+
+.fusion-modal .table-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.fusion-modal .table-row-description {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.fusion-modal .table-row-description > .btn {
+  width: 100px;
+}

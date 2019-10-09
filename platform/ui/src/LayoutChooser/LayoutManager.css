@@ -1,7 +1,16 @@
 .viewport-container {
-  float: left;
-  position: relative;
+  /* float: left;
+  position: relative; */
+  position: absolute;
   border: var(--viewport-border-thickness) solid var(--ui-border-color);
+}
+
+.LayoutManager {
+  position: relative;
+
+  /* display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto; */
 }
 
 .viewport-container.active {

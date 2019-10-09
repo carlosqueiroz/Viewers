@@ -1,5 +1,7 @@
 import { createSelector } from 'reselect';
 
+const emptyObj = {};
+
 const getActiveViewportIndex = state => state.viewports.activeViewportIndex;
 const getLayoutViewports = state => state.viewports.layout.viewports;
 const getViewportSpecificData = state => state.viewports.viewportSpecificData;
@@ -23,6 +25,17 @@ export const getActiveContexts = createSelector(
       activeContexts.push(activeViewportExtension);
     }
 
+    if (!!activeViewportSpecificData.fusion) {
+      activeContexts.push('FUSION');
+    }
+
     return activeContexts;
+  }
+);
+
+export const getActiveViewportData = createSelector(
+  [getActiveViewportIndex, getViewportSpecificData],
+  (activeViewportIndex, viewportSpecificData) => {
+    return viewportSpecificData[activeViewportIndex] || emptyObj;
   }
 );

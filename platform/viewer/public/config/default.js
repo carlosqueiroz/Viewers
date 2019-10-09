@@ -7,9 +7,9 @@ window.config = {
     dicomWeb: [
       {
         name: 'DCM4CHEE',
-        wadoUriRoot: 'https://server.dcmjs.org/dcm4chee-arc/aets/DCM4CHEE/wado',
-        qidoRoot: 'https://server.dcmjs.org/dcm4chee-arc/aets/DCM4CHEE/rs',
-        wadoRoot: 'https://server.dcmjs.org/dcm4chee-arc/aets/DCM4CHEE/rs',
+        wadoUriRoot: 'http://192.168.0.95:8080/dcm4chee-arc/aets/DCM4CHEE/wado',
+        qidoRoot: 'http://192.168.0.95:8080/dcm4chee-arc/aets/DCM4CHEE/rs',
+        wadoRoot: 'http://192.168.0.95:8080/dcm4chee-arc/aets/DCM4CHEE/rs',
         qidoSupportsIncludeField: true,
         imageRendering: 'wadors',
         thumbnailRendering: 'wadors',
@@ -68,6 +68,108 @@ window.config = {
       keys: ['pageup'],
     },
     // ~ Cornerstone Tools
-    { commandName: 'setZoomTool', label: 'Zoom', keys: ['z'] },
+    {
+      commandName: 'setToolActive',
+      commandOptions: { toolName: 'Zoom' },
+      label: 'Zoom',
+      keys: ['z'],
+    },
+    {
+      commandName: 'setToolActive',
+      commandOptions: { toolName: 'Pan' },
+      label: 'Pan',
+      keys: ['t'],
+    },
+    {
+      commandName: 'setToolActive',
+      commandOptions: { toolName: 'Wwwc' },
+      label: 'Windowing',
+      keys: ['w'],
+    },
+    {
+      commandName: 'setToolActive',
+      commandOptions: { toolName: 'StackScroll' },
+      label: 'Navegar',
+      keys: ['s'],
+    },
+    {
+      commandName: 'setToolActive',
+      commandOptions: { toolName: 'EllipticalRoi' },
+      label: 'Measure',
+      keys: ['m'],
+    },
+    {
+      commandName: 'setToolActive',
+      commandOptions: { toolName: 'Length' },
+      label: 'Length',
+      keys: ['d'],
+    },
+    {
+      commandName: 'setToolActive',
+      commandOptions: { toolName: 'Angle' },
+      label: 'Angle',
+      keys: ['a'],
+    },
+    {
+      commandName: 'toggleCine',
+      commandOptions: {},
+      label: 'Toggle Cine',
+      keys: ['c'],
+    },
+    // Fusion
+    {
+      commandName: 'increaseFusionOpacity',
+      commandOptions: { evt: { leftValue: 10, rightValue: -10 } },
+      label: 'Increase Fusion CR Opacity',
+      keys: ['shift+w'],
+    },
+    {
+      commandName: 'increaseFusionOpacity',
+      commandOptions: { evt: { leftValue: -10, rightValue: 10 } },
+      label: 'Increase Fusion DRR Opacity',
+      keys: ['shift+e'],
+    },
+    {
+      commandName: 'increaseFusionRotation',
+      commandOptions: { evt: { value: 15 } },
+      label: 'Rotate Fusion Right',
+      keys: ['shift+r'],
+    },
+    {
+      commandName: 'increaseFusionRotation',
+      commandOptions: { evt: { value: -15 } },
+      label: 'Rotate Fusion Left',
+      keys: ['shift+l'],
+    },
+    {
+      commandName: 'setToolActive',
+      commandOptions: { toolName: 'FusionPanTool' },
+      label: 'Pan Fusion',
+      keys: ['shift+t'],
+    },
+    {
+      commandName: 'setToolActive',
+      commandOptions: { toolName: 'FusionZoomTool' },
+      label: 'Zoom Fusion',
+      keys: ['shift+z'],
+    },
+    {
+      commandName: 'resetFusionState',
+      commandOptions: {},
+      label: 'Reset Fusion State',
+      keys: ['shift+space'],
+    },
+    {
+      commandName: 'nextFusionColormap',
+      commandOptions: {},
+      label: 'Next Fusion Color Map',
+      keys: ['shift+m'],
+    },
+    { // TODO: REMOVER DEPOIS!
+      commandName: 'setToolActive',
+      commandOptions: { toolName: 'DrawDoseTool' },
+      label: 'Draw Dose Tool',
+      keys: ['shift+d'],
+    },
   ],
 };

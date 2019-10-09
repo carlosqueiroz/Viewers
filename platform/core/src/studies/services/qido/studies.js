@@ -44,6 +44,7 @@ function getQIDOQueryParams(filter, serverSupportsQIDOIncludeField) {
     offset: filter.offset,
     fuzzymatching: filter.fuzzymatching,
     includefield: serverSupportsQIDOIncludeField ? commaSeparatedFields : 'all',
+    orderby: filter.orderby
   };
 
   // build the StudyDate range parameter

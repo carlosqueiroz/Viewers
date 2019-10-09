@@ -18,9 +18,11 @@ import { QuickSwitch } from './quickSwitch';
 import { RoundedButtonGroup } from './roundedButtonGroup';
 import { SelectTree } from './selectTree';
 import { SimpleDialog } from './simpleDialog';
+import { PatientList } from './patientList';
 import { StudyList } from './studyList';
 import { ToolbarSection } from './toolbarSection';
 import { Tooltip } from './tooltip';
+import { Modal } from './modal';
 
 export {
   CineDialog,
@@ -36,6 +38,7 @@ export {
   SelectTree,
   SimpleDialog,
   StudyBrowser,
+  PatientList,
   StudyList,
   TableList,
   TableListItem,
@@ -45,4 +48,5 @@ export {
   AboutModal,
   UserPreferences,
   UserPreferencesModal,
+  Modal
 };

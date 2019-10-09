@@ -17,8 +17,16 @@ import {
 import { I18nextProvider } from 'react-i18next';
 import initCornerstoneTools from './initCornerstoneTools.js';
 
+import rtConfigsActions from './store/rt_configs/actions.js';
+
 // ~~ EXTENSIONS
-import { GenericViewerCommands, MeasurementsPanel } from './appExtensions';
+import {
+  GenericViewerCommands,
+  MeasurementsPanel,
+  RTPlanViewer,
+  DvhViewer,
+  RTToolbarExtension
+} from './appExtensions';
 import OHIFCornerstoneExtension from '@ohif/extension-cornerstone';
 import OHIFStandaloneViewer from './OHIFStandaloneViewer';
 import { OidcProvider } from 'redux-oidc';
@@ -33,7 +41,7 @@ import store from './store';
 import UserManagerContext from './UserManagerContext';
 
 // ~~~~ APP SETUP
-initCornerstoneTools({
+initCornerstoneTools(store, {
   globalToolSyncEnabled: true,
   showSVGCursors: true,
 });
@@ -49,6 +57,10 @@ const extensionManager = new ExtensionManager({ commandsManager });
 
 // CornerstoneTools and labeling/measurements?
 setupTools(store);
+
+// RT CONFIGS
+store.dispatch(rtConfigsActions.getConfigs());
+
 // ~~~~ END APP SETUP
 
 // TODO[react] Use a provider when the whole tree is React
@@ -158,6 +170,10 @@ function _initExtensions(extensions) {
     GenericViewerCommands,
     MeasurementsPanel,
     OHIFCornerstoneExtension,
+    // Nossas Extensões
+    RTPlanViewer,
+    DvhViewer,
+    RTToolbarExtension
   ];
   const mergedExtensions = defaultExtensions.concat(extensions);
   extensionManager.registerExtensions(mergedExtensions);

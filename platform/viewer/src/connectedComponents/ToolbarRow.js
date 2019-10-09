@@ -48,6 +48,7 @@ class ToolbarRow extends Component {
     this._handleBuiltIn = _handleBuiltIn.bind(this);
 
     const panelModules = extensionManager.modules[MODULE_TYPES.PANEL];
+    // console.log('panelModules', panelModules)
     this.buttonGroups = {
       left: [
         // TODO: This should come from extensions, instead of being baked in
@@ -83,6 +84,7 @@ class ToolbarRow extends Component {
         }
       });
     });
+    console.log('buttonGroups', this.buttonGroups);
   }
 
   componentDidUpdate(prevProps) {
@@ -115,6 +117,8 @@ class ToolbarRow extends Component {
     };
     const onPressLeft = onPress.bind(this, 'left');
     const onPressRight = onPress.bind(this, 'right');
+
+    console.log('toolbadButtons', this.state.toolbarButtons);
 
     return (
       <>
@@ -235,7 +239,7 @@ function _getVisibleToolbarButtons() {
       }
     });
   });
-
+  // console.log('toolbarButtonDefinitions', toolbarButtonDefinitions)
   return toolbarButtonDefinitions;
 }
 

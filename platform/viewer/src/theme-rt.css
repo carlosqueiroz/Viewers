@@ -1,0 +1,73 @@
+:root {
+  /* Interface UI Colors */
+  --default-color: #d8d8d8 !important;
+  --hover-color: #fff !important;
+  --active-color: #039be5 !important;
+  --ui-border-color: #44626f !important;
+  --ui-border-color-dark: #d8d8d8 !important;
+  --ui-border-color-active: #00a4d9 !important;
+  --primary-background-color: #2d2f40 !important;
+  --box-background-color: #d8d8d8 !important;
+
+  --text-primary-color: #d8d8d8 !important;
+  --text-secondary-color: #d8d8d8 !important;
+  --input-background-color: #d8d8d8 !important;
+  --input-placeholder-color: #000 !important;
+
+  --table-hover-color: #64677d !important;
+  --table-text-primary-color: #d8d8d8 !important;
+  --table-text-secondary-color: #d8d8d8 !important;
+
+  --large-numbers-color: #d8d8d8 !important;
+
+  --state-error: #f99c9c !important;
+  --state-error-border: #f99c9c !important;
+  --state-error-text: #f99c9c !important;
+
+  /* Common palette */
+  --ui-yellow: #e29e4a !important;
+  --ui-sky-blue: #6fbde2 !important;
+
+  /* State palette */
+  --ui-state-error: #ffcccc !important;
+  --ui-state-error-border: #993333 !important;
+  --ui-state-error-text: #661111 !important;
+  --ui-gray-lighter: #436270 !important;
+  --ui-gray-light: #516873 !important;
+  --ui-gray: #263340 !important;
+  --ui-gray-dark: #2d2f40 !important;
+  --ui-gray-darker: #2d2f40 !important;
+  --ui-gray-darkest: #2d2f40 !important;
+
+  --calendar-day-color: #d3d3d3 !important;
+  --calendar-day-border-color: #d3d3d3 !important;
+  --calendar-day-active-hover-background-color: #516873 !important;
+  --calendar-main-color: #263340 !important;
+  --viewport-border-thickness: 1px !important;
+}
+
+html,
+body,
+#root {
+  background-color: #35384c !important;
+}
+.header-menu {
+  display: none !important;
+}
+
+.tableContainer table.table > tbody tr {
+  background-color: #3d4054;
+  cursor: pointer;
+}
+.tableContainer table.studylistResult > tbody tr {
+  cursor: default;
+}
+
+.layoutChooser-dropdown-menu {
+  background-color: #35384c !important;
+}
+
+.ImageThumbnail > .loadingIndicator {
+  color: white;
+}
+
